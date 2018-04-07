@@ -13,7 +13,7 @@ def read_char_list():
 def write_case_ans(i,ans):
     if isinstance(ans,list):
         ans = " ".join(map(str, ans))
-    print("Case #{}: {}".format(i, ans))
+    print("Case #{i}: {ans}".format(i=i, ans=ans), end='\n')
 
 def main():
     T = read_int()
