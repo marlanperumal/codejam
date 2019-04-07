@@ -1,62 +1,58 @@
 T = int(input())
-for t in range(1, T+1):
-    R, C, H, V = [int(si) for si in input().split()]
-    grid = []
-    for r in range(R):
-        grid.append([1 if ri == "@" else 0 for ri in str(input())])
-    # print(grid)
-    chocs = sum([sum(row) for row in grid])
 
-    done = False
+for t in range(1, T + 1):
+    R, C, H, V = [int(i) for i in input().split()]
+    grid = [
+        [1 if c == '@' else 0 for c in input()] for r in range(R)
+    ]
+    total_chips = sum([sum(row) for row in grid])
+    chips_per_vertical = total_chips / (V + 1)
+    chips_per_horizontal = total_chips / (H + 1)
+    chips_per_piece = total_chips / (V + 1) / (H + 1)
 
-    if chocs % ((H+1)*(V+1)) == 0:
-        chocs_each = chocs / ((H+1)*(V+1))
-        for r in range(1,R):
-            impossible = False
-            if not impossible:
-
-
-                top = grid[:r]
-                # print(top)
-
-                for c in range(1,C):
-                    sum_chocs = sum([sum(row[:c]) for row in top])
-                    # print(c, sum_chocs)
-                    if sum_chocs == chocs_each:
-                        hcuts = [r]
-                        vcuts = []
-                        top = [row[c:] for row in top]
-                        bottom = [row[:c] for row in grid[r:]]
-                        vcuts.append(c)
-                        for v in range(V-1):
-                            left_cell = vcuts[-1]
-                            right_cell = vcuts[-1]
-
-                        vcuts = [0] + vcuts + [C+1]
-                        hcuts = [0] + hcuts + [R+1]
-                        waffles = []
-                        for hi in range(len(hcuts)-1):
-                            for vi in range(len(vcuts)-1):
-                                waffles.append([row[vcuts[vi]:vcuts[vi+1]] for row in grid[hcuts[hi]:hcuts[hi+1]]])
-                        # print(vcuts)
-                        # print(hcuts)
-                        # print(waffles)
-                        waffle_chocs = [
-                            sum([sum(row) for row in waffle]) for waffle in waffles
-                        ]
-                        # print(waffle_chocs)
-                        if all([waffle_choc == chocs_each for waffle_choc in waffle_chocs]):
-                            done = True
-                            break
-                        # break
-                    elif sum_chocs > chocs_each:
-                        impossible = True
+    if total_chips == 0:
+        result = "POSSIBLE"
+    elif int(chips_per_piece) != chips_per_piece:
+        result = "IMPOSSIBLE"
+    else:
+        h_cuts = [0]
+        v_cuts = [0] 
+        complete_rows = 0
+        row_count = 0
+        for r, row in enumerate(grid):
+            row_count += sum(row)
+            if row_count == chips_per_vertical:
+                complete_rows += 1
+                row_count = 0
+                h_cuts.append(r + 1)
+            elif row_count > chips_per_vertical:
+                break
+        complete_cols = 0
+        col_count = 0
+        for c in range(C):
+            col_count += sum([row[c] for row in grid])
+            if col_count == chips_per_horizontal:
+                complete_cols += 1
+                col_count = 0
+                v_cuts.append(c + 1)
+            elif col_count > chips_per_horizontal:
+                break
+        if complete_rows != H + 1 or complete_cols != V + 1:
+            result = "IMPOSSIBLE"
+        else:
+            possible = True
+            for r in range(H):
+                if not possible:
+                    break
+                for c in range(V):
+                    chips = sum([sum(row[v_cuts[c]:v_cuts[c+1]]) 
+                        for row in grid[h_cuts[r]:h_cuts[r+1]]])
+                    if chips != chips_per_piece:
+                        possible = False
                         break
-                # if impossible:
-                #     break
+            if not possible:
+                result = "IMPOSSIBLE"
+            else:
+                result = "POSSIBLE"
 
-
-    # ans = [R, C, H, V]
-    ans = "POSSIBLE" if done else "IMPOSSIBLE"
-    print("Case #{}: {}".format(t, ans))
-    # print(grid)
+    print("Case #{t}: {result}".format(t=t, result=result))
