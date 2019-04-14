@@ -3,11 +3,11 @@ from collections import defaultdict
 def alien_rhyme(words):
     suffixes = defaultdict(set)
     for word in words:
-        for i in range(len(words)):
+        for i in range(len(word)):
             suffixes[word[-i:]].add(word)
     couplets = []
-    while len(suffixes) > 0:
-        suffix = max(suffixes, key=lambda x: len(x))
+    sorted_suffixes = sorted(suffixes, key=lambda x: len(x), reverse=True)
+    for suffix in sorted_suffixes:
         rhyming_set = suffixes[suffix]
         if len(rhyming_set) < 2:
             del suffixes[suffix]

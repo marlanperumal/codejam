@@ -48,8 +48,9 @@ class Board():
         self.visited = []
         self.current = None
 
-    def make_tour(self):
-        move = int((self.C) // 2 + ((self.R) // 2) * self.C)
+    def make_tour(self, start):
+        move = start
+        # move = int((self.C) // 2 + ((self.R) // 2) * self.C)
         while not self.check_board():  
             if move is not None:
                 self.current = move
@@ -64,7 +65,11 @@ class Board():
 
 def pylons(R, C):
     board = Board(R, C)
-    tour = board.make_tour()
+    for i in range(R * C):
+        tour = board.make_tour(i)
+        if tour is not None:
+            break
+        board.reset_board()
     if tour is None:
         return "IMPOSSIBLE"
     else:
