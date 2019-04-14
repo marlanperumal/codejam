@@ -1,39 +1,41 @@
 from math import sqrt
 
-T = int(input())
-for t in range(1,T+1):
-    N, P = [int(si) for si in input().split()]
-    P2 = P/2
-    cookies = []
-    for n in range(N):
-        wi, hi = [int(si) for si in input().split()]
-        cookies.append([wi, hi])
-    cookie_perimeters = [cookie[0]+cookie[1] for cookie in cookies]
-    cookie_min_extras = [min(cookie[0],cookie[1]) for cookie in cookies]
-    cookie_max_extras = [sqrt(cookie[0]**2  + cookie[1]**2) for cookie in cookies]
-
-    if sum(cookie_perimeters) > P2:
-        ans = sum(cookie_perimeters)*2
-    elif sum(cookie_perimeters) + sum(cookie_max_extras) < P2:
-        ans = 2*(sum(cookie_perimeters) + sum(cookie_max_extras))
-    elif (P-sum(cookie_perimeters))/N >= sum(cookie_min_extras)/N and (P-sum(cookie_perimeters))/N <= sum(cookie_max_extras)/N:
-        ans = 2*P
+def run(cookies, p):
+    # This will probably require some input arguments
+    W = [cookie[0] for cookie in cookies]
+    H = [cookie[1] for cookie in cookies]
+    original_perimeter = sum([2*(w + h) for w, h in zip(W, H)])
+    target_additional = p - original_perimeter
+    upper_bound = sum([8*h for h in H])
+    lower_bound = 0
+    intervals = []
+    previous_interval = [0, 0]
+    for w, h in zip(W, H):
+        new_interval = [previous_interval[0] + 2*w, previous_interval[1] + 2*sqrt(w**2 + h**2)]
+        if target_additional < new_interval[0]:
+            upper_bound = new_interval[0]
+            break
+        elif target_additional <= new_interval[1]:
+            upper_bound = target_additional
+            lower_bound = target_additional
+            break
+        else:
+            lower_bound = new_interval[1]
+            
+        intervals.append(new_interval)
+        previous_interval = new_interval
+    if target_additional - lower_bound < upper_bound - target_additional:
+        return original_perimeter + lower_bound
     else:
-        closest = P - sum(cookie_perimeters)
-        curr_P = sum(cookie_perimeters)
-        for n in range(n):
-            curr_P += cookie_min_extras[n]
-            if abs(P - curr_P) < closest:
-                closest = abs(P - curr_P)
-            if curr_P > P:
-                break
-            if curr_P + cookie_max_extras[n] - cookie_min_extras[n] > P:
-                closest = P
-                break
-            curr_P += cookie_max_extras[n] - cookie_min_extras[n]
-            if abs(P - curr_P) < closest:
-                closest = abs(P - curr_P)
-        ans = closest*2
+        return original_perimeter + upper_bound
+    
 
-
-    print("Case #{}: {}".format(t, ans))
+if __name__ == "__main__":
+    T = int(input())
+    for t in range(1, T + 1):
+        # There will probably be some additional inputs
+        N, P = [int(i) for i in input().split()]
+        cookies = [[int(i) for i in input().split()] for n in range(N)]
+        cookies = [[w, h] if w < h else [h, w] for w, h in cookies]
+        result = run(cookies, P)
+        print("Case #{}: {}".format(t, result))
