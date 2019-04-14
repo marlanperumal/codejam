@@ -16,26 +16,26 @@ for t in range(1, T + 1):
         result = "IMPOSSIBLE"
     else:
         h_cuts = [0]
-        v_cuts = [0] 
+        v_cuts = [0]
         complete_rows = 0
         row_count = 0
         for r, row in enumerate(grid):
             row_count += sum(row)
-            if row_count == chips_per_vertical:
+            if row_count == chips_per_horizontal:
                 complete_rows += 1
                 row_count = 0
                 h_cuts.append(r + 1)
-            elif row_count > chips_per_vertical:
+            elif row_count > chips_per_horizontal:
                 break
         complete_cols = 0
         col_count = 0
         for c in range(C):
             col_count += sum([row[c] for row in grid])
-            if col_count == chips_per_horizontal:
+            if col_count == chips_per_vertical:
                 complete_cols += 1
                 col_count = 0
                 v_cuts.append(c + 1)
-            elif col_count > chips_per_horizontal:
+            elif col_count > chips_per_vertical:
                 break
         if complete_rows != H + 1 or complete_cols != V + 1:
             result = "IMPOSSIBLE"
