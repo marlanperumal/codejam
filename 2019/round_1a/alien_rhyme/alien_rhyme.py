@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+
 def alien_rhyme(words):
     suffixes = defaultdict(set)
     for word in words:
@@ -21,6 +22,7 @@ def alien_rhyme(words):
         del suffixes[suffix]
 
     return len(couplets) * 2
+
 
 if __name__ == "__main__":
     T = int(input())

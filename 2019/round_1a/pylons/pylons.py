@@ -5,7 +5,7 @@ class Square():
         self.r = r
         self.c = c
         self.knight_moves = [
-            c1 + r1 * C for r1 in range(R) for c1 in range(C)
+            c1 + r1*C for r1 in range(R) for c1 in range(C)
             if r != r1 and c != c1 and r - c != r1 - c1 and r + c != r1 + c1
         ]
         self.visited = False
@@ -16,10 +16,9 @@ class Board():
         self.R = R
         self.C = C
         self.reset_board()
-        
 
     def check_board(self):
-        return len(self.visited) ==  R * C
+        return len(self.visited) == R * C
 
     def next_move(self):
         lowest_onward = R * C
@@ -50,8 +49,7 @@ class Board():
 
     def make_tour(self, start):
         move = start
-        # move = int((self.C) // 2 + ((self.R) // 2) * self.C)
-        while not self.check_board():  
+        while not self.check_board():
             if move is not None:
                 self.current = move
                 self.visited.append(move)
@@ -60,7 +58,6 @@ class Board():
                 return None
             move = self.next_move()
         return [[self.squares[i].r, self.squares[i].c] for i in self.visited]
-
 
 
 def pylons(R, C):
@@ -78,6 +75,7 @@ def pylons(R, C):
         ])
 
     return result
+
 
 if __name__ == "__main__":
     T = int(input())
