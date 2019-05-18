@@ -1,16 +1,16 @@
-input_file = "manhattan_crepe_cart.sample.in"
+# input_file = "manhattan_crepe_cart.sample.in"
 
 
-def input_from_file(filename):
-    for line in open(filename):
-        yield line.strip()
+# def input_from_file(filename):
+#     for line in open(filename):
+#         yield line.strip()
 
 
-file_input = input_from_file(input_file)
+# file_input = input_from_file(input_file)
 
 
-def input():
-    return next(file_input)
+# def input():
+#     return next(file_input)
 
 
 def run(P, Q, X, Y, D):

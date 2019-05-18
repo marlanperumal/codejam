@@ -15,35 +15,41 @@
 
 def run(P, Q, X, Y, D):
     # grid = [[0]*(Q + 1) for q in range(Q + 1)]
-    Xs = sorted([[x, -1 if d == "W" else 1] for x, d in zip(X, D) if d in ["E", "W"]])
-    Ys = sorted([[y, -1 if d == "S" else 1] for y, d in zip(Y, D) if d in ["N", "S"]])
+    Xs = sorted([[x, -1 if d == "W" else 1, 0, 0, 0] for x, d in zip(X, D) if d in ["E", "W"]])
+    Ys = sorted([[y, -1 if d == "S" else 1, 0, 0, 0] for y, d in zip(Y, D) if d in ["N", "S"]])
 
-    Xs = [[0, 0]] + Xs
-    Xs = sorted(Xs + [[x + 1, 0] for x, d in Xs if x + 1 < Q])
-    if Xs[-1][0] != Q:
-        Xs = Xs + [[Q, 0]]
+    Xs = sorted(Xs + [[x[0] + 1, 0, 0, 0, 0] for x in Xs if x[0] + 1 <= Q])
+    Xs = [[0, 0, 0, 0, 0]] + Xs
 
-    Xi = [[0, 0]]
-    for i in range(1, len(Xs)):
-        Xi.append([Xs[i][0], Xi[i-1][1] + Xs[i-1][1]])
-    
-    Ys = [[0, 0]] + Ys
-    Ys = sorted(Ys + [[y + 1, 0] for y, d in Ys if y + 1 < Q])
-    if Ys[-1][0] != Q:
-        Ys = Ys + [[Q, 0]]
+    for i, xs in enumerate(Xs[1:]):
+        xs[2] = Xs[i][2] + max(Xs[i][1], 0)
 
-    Yi = [[0, 0]]
-    for i in range(1, len(Ys)):
-        Yi.append([Ys[i][0], Yi[i-1][1] + Ys[i-1][1]])
+    for i, xs in enumerate(reversed(Xs[:len(Xs)-1])):
+        j = len(Xs) - i - 1
+        xs[3] = Xs[j][3] - min(Xs[j][1], 0)
 
-    Xd = {}
-    Yd = {}
-    for x, i in Xi:
-        Xd[x] = i
-    for y, i in Yi:
-        Yd[y] = i
+    for xs in Xs:
+        xs[4] = xs[2] + xs[3]
 
-    return "{} {}".format(max(Xd, key=lambda x: [Xd[x], -x]), max(Yd, key=lambda y: [Yd[y], -y]))
+    Ys = sorted(Ys + [[y[0] + 1, 0, 0, 0, 0] for y in Ys if y[0] + 1 <= Q])
+    Ys = [[0, 0, 0, 0, 0]] + Ys
+
+    for i, ys in enumerate(Ys[1:]):
+        ys[2] = Ys[i][2] + max(Ys[i][1], 0)
+
+    for i, ys in enumerate(reversed(Ys[:len(Ys)-1])):
+        j = len(Ys) - i - 1
+        ys[3] = Ys[j][3] - min(Ys[j][1], 0)
+
+    for ys in Ys:
+        ys[4] = ys[2] + ys[3]
+    if t == 5:
+        print(sorted(Xs, key=lambda x: [-x[4], x[0]]))
+        print(sorted(Ys, key=lambda y: [-y[4], y[0]]))
+    return "{} {}".format(
+        max(Xs, key=lambda x: [x[4], -x[0]])[0], 
+        max(Ys, key=lambda y: [y[4], -y[0]])[0]
+    )
 
 
 if __name__ == "__main__":
