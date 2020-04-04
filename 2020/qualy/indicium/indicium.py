@@ -1,12 +1,31 @@
-def run(N, K):
-    if K % N != 0:
-        return "IMPOSSIBLE", None
+from itertools import permutations
 
-    i = K // N
-    grid = []
+traces = {}
+for N in range(2, 6):
+    traces[N] = {}
+    row = list(range(N))
+    perms = [p for p in permutations(row, N)]
+    base_grid = []
     for n in range(N):
-        grid.append([(j + i - n - 1) % N + 1 for j in range(N)])
-    return "POSSIBLE", grid
+        base_grid.append([(j - n) % N for j in range(N)])
+
+    for p1 in perms:
+        p2 = row
+        for p3 in perms:
+            grid = [[base_grid[i][j] for i in p1] for j in p2]
+            trace = sum([p3[grid[i][i]] for i in range(N)]) + N
+            if trace not in traces[N]:
+                traces[N][trace] = [
+                    [p3[grid[i][j]] + 1 for i in range(N)]
+                    for j in range(N)
+                ]
+
+
+def run(N, K):
+    if K not in traces[N]:
+        return "IMPOSSIBLE", None
+    else:
+        return "POSSIBLE", traces[N][K]
 
 
 if __name__ == "__main__":
