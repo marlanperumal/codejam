@@ -1,1 +1,6 @@
 .ipynb_checkpoints/
+.pytest_cache/
+.vscode/
+__pycache__/
+Pipfile
+Pipfile.lock
