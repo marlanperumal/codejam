@@ -10,13 +10,18 @@ ticks_per_sec = ticks_per_rev / 60
 
 # %%
 def run(A, B, C):
+    # offset = min(A, B, C)
+    # A, B, C = A - offset, B - offset, C - offset
     for h, m, s in permutations([A, B, C]):
-        if m / 12 == h % ticks_per_hour and s / 60 == m % ticks_per_min:
-            hh = int(h // ticks_per_hour)
-            mm = int(m // ticks_per_min)
-            ss = int(s // ticks_per_sec)
-            nn = 0
-            return [hh, mm, ss, nn]
+        h, m, s = h - s, m - s, s - s
+        for i in range(60):
+            offset = i * ticks_per_sec
+            if ((m - offset) % ticks_per_rev) / 12 == (h - offset) % ticks_per_hour and ((s - offset) % ticks_per_rev) / 60 == (m - offset) % ticks_per_min:
+                hh = int((h - offset) // ticks_per_hour) % 12
+                mm = int((m - offset) // ticks_per_min) % 60
+                ss = int((s - offset) // ticks_per_sec) % 60
+                nn = 0
+                return [hh, mm, ss, nn]
     return [None, None, None, None]
 
 
